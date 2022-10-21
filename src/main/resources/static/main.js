@@ -245,7 +245,7 @@ function sendRequest(method, url, body = null) {
     return fetch(requestUrlPrefix + url, method === 'GET' ? null : options).then(response => {
         if (!response.ok) {
             response.status === 409 ? showAlert('Data not saved!\nUser with this email already exists in the database!') :
-                showAlert('Something went wrong')
+                showAlert('Что-то пошло не так')
             throw new Error('Server response: ' + response.status);
         }
         return response.json();
