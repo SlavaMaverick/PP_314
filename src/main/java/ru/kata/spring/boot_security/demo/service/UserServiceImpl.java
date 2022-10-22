@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,12 +11,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
+import ru.kata.spring.boot_security.demo.util.UserNotFoundException;
 
-import java.security.InvalidParameterException;
-import java.util.List;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import java.util.*;
 
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserDetailsService, UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -25,69 +29,67 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
     @Transactional
-    public boolean addUser(User user) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
-        if (userFromDB != null) {
-            return false;
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        return true;
-    }
-
     @Override
-    @Transactional(readOnly = true)
-    public User getUserById(Long id) {
-        return userRepository.getById(id); // findById(id).get();
-    }
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        User user = userRepository.findUserByEmail(s);
 
-    @Override
-    @Transactional
-    public boolean updateUserById(User user) throws InvalidParameterException {
-        if (userRepository.findByUsername(user.getUsername()) != null &&
-                !userRepository.findByUsername(user.getUsername()).getId().equals(user.getId())) {
-            return false;
-        }
-        if (user.getPassword().isEmpty()) {
-            user.setPassword(userRepository.findById(user.getId()).get().getPassword());
-        } else {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-        userRepository.save(user);
-        return true;
-    }
-
-    @Override
-    @Transactional
-    public boolean deleteUserById(Long id) {
-        if (userRepository.findById(id).isEmpty()) {
-            return false;
-        }
-        userRepository.deleteById(id);
-        return true;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public User getUserByName(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = getUserByName(username);
         if (user == null) {
-            throw new UsernameNotFoundException(String.format("User '%s' not found", username));
+            throw new UsernameNotFoundException("User not found");
         }
         return user;
+    }
+
+
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
+
+
+    @Override
+    @Transactional
+    public void save(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        try {
+            if (userRepository.findUserByEmail(user.getEmail()) != null) {
+                throw new NonUniqueResultException("Ошибка: логин '" + user.getEmail() + "' уже занят.");
+            }
+        } catch (EmptyResultDataAccessException | NoResultException ignored) {
+        }
+        userRepository.save(user);
+    }
+
+
+    @Override
+    @Transactional
+    public void update(int id, User updateUser) {
+
+        User user = userRepository.getById(id);
+
+        if (updateUser.getPassword().equals(user.getPassword())) {
+            userRepository.update(updateUser);
+        } else {
+            String pass = passwordEncoder.encode(updateUser.getPassword());
+            updateUser.setPassword(pass);
+            userRepository.update(updateUser);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(int id) {
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public User getById(int id) {
+        Optional<User> foundUser = Optional.ofNullable(userRepository.getById(id));
+        return foundUser.orElseThrow(UserNotFoundException::new);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }

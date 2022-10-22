@@ -1,20 +1,24 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
-
 import java.util.List;
 
+@Service
 public interface UserService {
 
-    boolean addUser(User user);
+    User findUserByEmail(String email);
 
-    User getUserById(Long id);
+    void save(User user);
 
-    boolean updateUserById(User user);
+    @Transactional
+    void update(int id, User updateUser);
 
-    boolean deleteUserById(Long id);
+    void deleteById(int id);
 
-    List<User> getAllUsers();
+    User getById(int id);
 
-    User getUserByName(String name);
+    List<User> findAll();
+
 }

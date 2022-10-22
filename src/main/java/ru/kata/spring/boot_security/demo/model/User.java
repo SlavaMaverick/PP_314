@@ -2,42 +2,85 @@ package ru.kata.spring.boot_security.demo.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import org.springframework.stereotype.Component;
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Set;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
+@Component
 public class User implements UserDetails {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @Column(name = "Email_address")
-    private String username;
+    @NotEmpty(message = "Name should not be empty")
+    @Size(min = 1, max = 35, message = "Name should contain up to 35 characters")
+    @Column(name = "name")
+    private String name;
 
-    private String firstName;
+    @Column(name = "age")
+    @Min(value = 0, message = "Age cannot be negative")
+    @Max(value = 122, message = "Age should be less than 122")
+    private int age;
 
-    private String lastName;
+    @Column(name = "country")
+    @NotEmpty(message = "Country should not be empty")
+    private String country;
 
-    private Integer age;
+    @Column(unique = true, updatable = false, name = "email")
+    @NotEmpty(message = "Username should not be empty")
+    private String email;
 
+    @Column(name = "password")
+    @NotEmpty(message = "Password should not be empty")
     private String password;
 
-    @ManyToMany
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<Role> roles = new java.util.LinkedHashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.JOIN)
+    @JoinTable (name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+
+    public User(String name, int age, String country, String email, String password, Set<Role> roles) {
+        this.name = name;
+        this.age = age;
+        this.country = country;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
+    public Set<? extends SimpleGrantedAuthority> getAuthorities() {
+        Set<SimpleGrantedAuthority> authorities =
+                getRoles().stream()
+                        .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
+                        .collect(Collectors.toSet());
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email ;
     }
 
     @Override
@@ -59,4 +102,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
