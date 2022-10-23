@@ -22,33 +22,32 @@ import java.util.stream.Collectors;
 @Component
 public class User implements UserDetails {
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotEmpty(message = "Name should not be empty")
-    @Size(min = 1, max = 35, message = "Name should contain up to 35 characters")
-    @Column(name = "name")
-    private String name;
+    @NotEmpty(message = "Имя не должно быть пустым")
+    @Size(min = 1, max = 30, message = "Имя должно содержать только 30 символов")
+    private String firstName;
 
-    @Column(name = "age")
-    @Min(value = 0, message = "Age cannot be negative")
-    @Max(value = 122, message = "Age should be less than 122")
+    @NotEmpty(message = "Имя не должно быть пустым")
+    @Size(min = 1, max = 40, message = "Фамилия должна содержать только 30 символов")
+    private String lastName;
+
+    @Min(value = 0, message = "Возраст не может быть отрицательным")
+    @Max(value = 130, message = "Возраст должен быть меньше 130 лет")
     private int age;
 
-    @Column(name = "country")
-    @NotEmpty(message = "Country should not be empty")
-    private String country;
+//    @NotEmpty(message = "Country should not be empty")
+//    private String country;
 
     @Column(unique = true, updatable = false, name = "email")
-    @NotEmpty(message = "Username should not be empty")
+    @NotEmpty(message = "Адрес не должен быть пустым")
     private String email;
 
-    @Column(name = "password")
-    @NotEmpty(message = "Password should not be empty")
+    @NotEmpty(message = "Пароль не должен быть пустым")
     private String password;
 
-//     и так можно, работает:
+//     и так можно, тоже работает:
 //    @ManyToMany(fetch = FetchType.LAZY)
 //    @Fetch(FetchMode.JOIN)
 //    @JoinTable (name = "users_roles",
@@ -62,12 +61,12 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles = new java.util.LinkedHashSet<>();
 
-    public User(String name, int age, String country, String email, String password, Set<Role> roles) {
-        this.name = name;
+    public User(int age, String firstName, String lastName, String password, String email, Set<Role> roles) {
         this.age = age;
-        this.country = country;
-        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.password = password;
+        this.email = email;
         this.roles = roles;
     }
 

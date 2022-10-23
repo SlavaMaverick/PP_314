@@ -18,8 +18,8 @@ async function thisUser() {
             let user = `$(
             <tr>
                 <td>${data.id}</td>
-                <td>${data.name}</td>
-                <td>${data.country}</td>
+                <td>${data.firstName}</td>
+                <td>${data.lastName}</td>
                 <td>${data.age}</td>
                 <td>${data.email}</td>
                
@@ -37,8 +37,8 @@ async function allUsers() {
                 let tableWithUsers = `$(
                         <tr>
                             <td>${user.id}</td>
-                            <td>${user.name}</td>
-                            <td>${user.country}</td>
+                            <td>${data.firstName}</td>
+                            <td>${data.lastName}</td>
                             <td>${user.age}</td>
                             <td>${user.email}</td>
                             
@@ -88,8 +88,8 @@ async function newUser() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                name: form.name.value,
-                country: form.country.value,
+                firstName: form.firstName.value,
+                lastName: form.lastName.value,
                 age: form.age.value,
                 email: form.email.value,
                 password: form.password.value,
@@ -114,8 +114,8 @@ async function showEditModal(id) {
     let user = await getUser(id);
     let form = document.forms["formEditUser"];
     form.id.value = user.id;
-    form.name.value = user.name;
-    form.country.value = user.country;
+    form.firstName.value = user.firstName;
+    form.lastName.value = user.lastName;
     form.age.value = user.age;
     form.email.value = user.email;
     form.password.value = user.password;
@@ -161,8 +161,8 @@ function editUser() {
             },
             body: JSON.stringify({
                 id: editForm.id.value,
-                name: editForm.name.value,
-                country: editForm.country.value,
+                firstName: editForm.firstName.value,
+                lastName: editForm.lastName.value,
                 age: editForm.age.value,
                 email: editForm.email.value,
                 password: editForm.password.value,
@@ -185,8 +185,8 @@ async function showDeleteModal(id) {
     let user = await getUser(id);
     let form = document.forms["formDeleteUser"];
     form.id.value = user.id;
-    form.name.value = user.name;
-    form.country.value = user.country;
+    form.firstName.value = user.firstName;
+    form.lastName.value = user.lastName;
     form.age.value = user.age;
     form.email.value = user.email;
 

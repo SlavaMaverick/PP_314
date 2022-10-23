@@ -9,8 +9,8 @@ async function thisUser() {
             let user = `$(
             <tr>
                 <td>${data.id}</td>
-                <td>${data.name}</td>
-                <td>${data.country}</td>
+                <td>${data.firstName}</td>
+                <td>${data.lastName}</td>
                 <td>${data.age}</td>
                 <td>${data.email}</td>
                 <td>${roles}</td>)`;
