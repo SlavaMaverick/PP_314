@@ -22,7 +22,7 @@ async function thisUser() {
                 <td>${data.lastName}</td>
                 <td>${data.age}</td>
                 <td>${data.email}</td>
-               
+                               
                 <td>${roles}</td>)`;
             $('#userPanelBody').append(user);
         })
