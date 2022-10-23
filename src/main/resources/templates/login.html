@@ -3,23 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Login page</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Мета-тег области просмотра. 1) viewport - настройки, связанные с отзывчивостью мобильных устройств -->
+    <!-- 2) width=device-width использовать физическую ширину устройства (отлично для мобильных устройств) -->
+    <!-- 3) initial-scale=1 начальный масштаб (1 - отсутствие масштабирования) Необходима только для Safari на iOS 9-->
+    <!-- 4) Параметр shrink-to-fit=no больше не нужен -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
           integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 </head>
 <body>
-<br>
-<br>
 <div class="container">
-    <div class="row">
+    <div class="row g-1">
         <div class="col-lg-4 offset-4">
             <form method="post" class="form-signin" action="/login">
+                <br>
                 <h2 class="form-signin-heading"><strong>Please sign in</strong></h2>
-                <h1></h1>
+                <p>
                 <input type="login" name="username" class="form-control" placeholder="Email address" required autofocus>
+                </p>
+                <p>
                 <input type="password" name="password" class="form-control" placeholder="Password" required>
-                <h1></h1>
+                </p>
+                <input name="_csrf" type="hidden" value="4bfd1575-3ad1-4d21-96c7-4ef2d9f86721" />
                 <button type="submit" class="btn btn-lg btn-primary btn-block form-control">Sign in</button>
             </form>
         </div>

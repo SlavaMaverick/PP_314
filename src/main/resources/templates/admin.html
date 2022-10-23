@@ -1,24 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin panel</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-
+<!-- CSS для Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
           integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 </head>
-<body>
 
-<!--Шапка страницы-->
+<body>
 <header>
     <div class="container-fluid" style="padding: 0">
         <div class="row">
             <div class="col-12">
                 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-                    <!-- Navbar content -->
                     <div class="collapse navbar-collapse" id="user">
                         <ul class="navbar-nav mr-auto">
                             <a class="navbar-brand font-weight-bold" id="headerUsername"></a>
@@ -37,12 +33,12 @@
     </div>
 </header>
 
+<!-- container-fluid = width 100% во всех контрольных точках, g-0 = Макет.Промежутки.Нету -->
+<!-- align-items-start = элементы вверху по оси Y. Один контейнер и один row без промежутков -->
+<div class="container-fluid g-0 align-items-start">
+    <div class="row g-0">
 
-<div class="container-fluid">
-    <div class="row">
-
-        <!--Панель слева-->
-
+        <!-- Колонка слева (роли) -->
         <div class="col-2" style="padding: 0; padding-top: 15px">
             <ul class="nav nav-pills flex-column">
                 <li class="nav-item">
@@ -54,13 +50,11 @@
             </ul>
         </div>
 
-        <!--Панель справа-->
-
+        <!-- Колонка справа (контент) -->
         <div class="col-10 bg-light">
             <div class="tab-content" style="padding-top: 15px; height: 100vh">
 
-                <!--Панель админа-->
-
+        <!-- Контент для ROLE_ADMIN -->
                 <div class="tab-pane fade show active" id="adminPanel">
                     <h2>Admin panel</h2>
                     <ul class="nav nav-tabs">
@@ -73,8 +67,7 @@
                     </ul>
                     <div class="tab-content">
 
-                        <!--Таблица пользователей-->
-
+        <!-- Таблица всех пользователей -->
                         <div class="tab-pane fade show active" id="allUsers">
                             <div class="card">
                                 <h5 class="card-header">All users</h5>
@@ -93,13 +86,14 @@
                                         </tr>
                                         </thead>
                                         <tbody id="tbodyAllUserTable">
+                                        <!-- JavaScript -->
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
 
-                        <!--Добавление пользователя-->
+        <!-- Колонка добавить нового пользователя -->
 
                         <div class="tab-pane fade" id="newUser">
                             <div class="form-group">
@@ -158,7 +152,7 @@
                     </div>
                 </div>
 
-                <!--Панель пользователя-->
+        <!-- Контент для ROLE_USER -->
 
                 <div class="tab-pane fade" id="userPanel">
                     <h2>User information-page</h2>
@@ -187,7 +181,7 @@
     </div>
 </div>
 
-<!--Редактироване пользователя-->
+<!-- Модальное окно для редактирования -->
 
 <div class="modal fade" id="edit" tabindex="-1" role="dialog"
      aria-labelledby="editModalLabel" aria-hidden="true">
@@ -251,7 +245,7 @@
     </div>
 </div>
 
-<!--Удаление пользователя-->
+<!-- Модальное окно удаления -->
 
 <div class="modal fade" id="delete" tabindex="-1" role="dialog"
      aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -310,9 +304,7 @@
     </div>
 </div>
 
-
-<!-- Отдельные JS для Popper и Bootstrap -->
-
+<!-- JS ресурсы -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
@@ -322,8 +314,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
         integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2"
         crossorigin="anonymous"></script>
-
-<!-- JS -->
 
 <script type="text/javascript" src="admin.js"></script>
 </body>
