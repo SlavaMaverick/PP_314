@@ -37,8 +37,8 @@ async function allUsers() {
                 let tableWithUsers = `$(
                         <tr>
                             <td>${user.id}</td>
-                            <td>${data.firstName}</td>
-                            <td>${data.lastName}</td>
+                            <td>${user.firstName}</td>
+                            <td>${user.lastName}</td>
                             <td>${user.age}</td>
                             <td>${user.email}</td>
                             
