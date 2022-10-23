@@ -48,7 +48,7 @@ public class User implements UserDetails {
     @NotEmpty(message = "Password should not be empty")
     private String password;
 
-// и так можно, работает:
+//     и так можно, работает:
 //    @ManyToMany(fetch = FetchType.LAZY)
 //    @Fetch(FetchMode.JOIN)
 //    @JoinTable (name = "users_roles",
