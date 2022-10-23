@@ -30,8 +30,7 @@ public class AdminRestController {
         this.roleService = roleService;
     }
 
-
-//////////////////////// ПОЛУЧЕНИЕ ПОЛЬЗОВАТЕЛЕЙ И ОБРАБОТКА ОШИБОК ///////////////////////////////////////////
+    // Получение списка пользователей
 
     @GetMapping("/admin")
     public List<User> getUsers(){
@@ -45,26 +44,14 @@ public class AdminRestController {
 
     private ResponseEntity<UserErrorResponse> handleException(UserNotFoundException e){
         UserErrorResponse response = new UserErrorResponse(
-                "User with this id wasn't found",
+                "Пользователь с таким идентификатором не найден",
                 System.currentTimeMillis()
         );
-        // В HTTP ответе будет отображено тело ответа (response) и статус в заголовке
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND); // NOT FOUND - 404 статус
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND); // статус 404
     }
 
+    // Добавление нового пользователя (по Алишеву)
 
-//////////////////////// ДОБАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯ И ОБРАБОТКА ОШИБОК ///////////////////////////////////////////
-
-///// СПРАВОЧНО: КОРОТКИЙ СПОСОБ
-//    @PostMapping("/admin")
-//    public ResponseEntity<User> addUser(@RequestBody User user) {
-//        userService.save(user);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-
-
-    ///// СПОСОБ С ОБРАБОТКОЙ ОШИБОК (ПО АЛИШЕВУ)
-    //@RequestBody - Spring преобразует входящий JSON в объект User
     @PostMapping("/admin")
     private ResponseEntity<HttpStatus> create(@RequestBody @Valid User user, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
@@ -78,8 +65,7 @@ public class AdminRestController {
             throw new UserNotCreatedException(errorMsg.toString());
         }
         userService.save(user);
-        //Отправляем HTTP ответ пустым телом и статусом 200
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(HttpStatus.OK);  // статус 200
     }
 
     private ResponseEntity<UserErrorResponse> handleException(UserNotCreatedException e){
@@ -87,12 +73,10 @@ public class AdminRestController {
                 e.getMessage(),
                 System.currentTimeMillis()
         );
-        // В HTTP ответе будет тело ответа (response) и статус в заголовке
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST); // - 400 статус
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);  // статус 400
     }
 
-
-//////////////////////// РЕДАКТИРОВАНИЕ И УДАЛЕНИЕ (без отдельной обработки ошибок, можно добавить) ///////////
+    // Редактирование и удаление пользователя
 
     @PostMapping("/admin/{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") int id, @RequestBody User user) {

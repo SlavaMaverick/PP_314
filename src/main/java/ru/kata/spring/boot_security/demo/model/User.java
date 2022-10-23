@@ -37,9 +37,6 @@ public class User implements UserDetails {
     @Max(value = 130, message = "Возраст должен быть меньше 130 лет")
     private int age;
 
-//    @NotEmpty(message = "Country should not be empty")
-//    private String country;
-
     @Column(unique = true, updatable = false, name = "email")
     @NotEmpty(message = "Адрес не должен быть пустым")
     private String email;
